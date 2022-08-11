@@ -1,0 +1,518 @@
+{
+    "language": "English",
+    "@language":{
+        "description": "The current Language"
+    },
+    "languageName": "English",
+    "@languageName":{
+        "description": "The current Language"
+    },
+    "welcome": "Welcome",
+    "@language":{
+        "description": "On Boarding first page title"
+    },
+    "firstLine": "Leema can show you what helps you",
+    "@language":{
+        "description": "On Boarding first page first line"
+    },
+    "secondLine": "and similar users",
+    "@language":{
+        "description": "On Boarding first page second line"
+    },
+    "myStats": "My stats",
+    "@myStats":{
+        "description": "On Boarding first page second line"
+    },
+    "myWallet": "My wallet",
+    "@myWallet":{
+        "description": "On Boarding first page second line"
+    },
+    "settings": "Settings",
+    "@settings":{
+        "description": "On Boarding first page second line"
+    },
+    "menu": "Menu",
+    "@menu":{
+        "description": "On Boarding first page second line"
+    },
+    "connectGarminWatch": "Connect Garmin",
+    "@connectGarminWatch":{
+        "description": "On Boarding first page second line"
+    },
+    "remineders": "Remineders",
+    "@remineders":{
+        "description": "On Boarding first page second line"
+    },
+    "help": "Help",
+    "@help":{
+        "description": "On Boarding first page second line"
+    },
+    "homePage": "Home page",
+    "@homePage":{
+        "description": "On Boarding first page second line"
+    },
+    "products": "Products",
+    "@products":{
+        "description": "On Boarding first page second line"
+    },
+    "logout": "Log out",
+    "@myStats":{
+        "description": "On Boarding first page second line"
+    },
+    "logout1": "Log out",
+    "@myStats":{
+        "description": "On Boarding first page second line"
+    },
+    "gender": "Gender",
+    "@gender":{
+        "description": "On Boarding first page second line"
+    },
+    "dateOfBirth": "Date of birth",
+    "@dateOfBirth":{
+        "description": "On Boarding first page second line"
+    },
+    "reasonForUsing": "I'm using cannabis to treat",
+    "@reasonForUsing":{
+        "description": "On Boarding first page second line"
+    },
+    "amountOfSmoking": "Amount of smoking",
+    "@amountOfSmoking":{
+        "description": "On Boarding first page second line"
+    },
+    "weight": "Weight",
+    "@weight":{
+        "description": "On Boarding first page second line"
+    },
+    "awakeTime": "Awake time",
+    "@awakeTime":{
+        "description": "On Boarding first page second line"
+    },
+    "sleepTime": "Sleep time",
+    "@sleepTime":{
+        "description": "On Boarding first page second line"
+    },
+    "personalStats": "Personal stats",
+    "@personalStats":{
+        "description": "On Boarding first page second line"
+    },
+    "skip": "Skip",
+    "@skip":{
+        "description": "On Boarding first page second line"
+    },
+    "skipTitleDialog": "Are you sure you want to skip?",
+    "@skipTitleDialog":{
+        "description": "On Boarding first page second line"
+    },
+    "skipContentDialog": "Filling in personal details will help us along the way. Are you sure you want to skip this step?",
+    "@skipContentDialog":{
+        "description": "On Boarding first page second line"
+    },
+    "yes": "Yes",
+    "@yes":{
+        "description": "On Boarding first page second line"
+    },
+    "no": "No",
+    "@no":{
+        "description": "On Boarding first page second line"
+    },
+    "getStarted": "Get started",
+    "@getStarted":{
+        "description": "On Boarding first page second line"
+    },
+    "personalCareDaily": "Your personal care diary",
+    "@personalCareDaily":{
+        "description": "On Boarding first page second line"
+    },
+    "getPersonalizedTips": "Get personalized tips",
+    "@getPersonalizedTips":{
+        "description": "On Boarding first page second line"
+    },
+    "andHelpFromTheCommunity": "and help from the community",
+    "@andHelpFromTheCommunity":{
+        "description": "On Boarding first page second line"
+    },
+    "signUpWithEmail": "Sign up with email",
+    "@signUpWithEmail":{
+        "description": "On Boarding first page second line"
+    },
+    "signUpWithFacebook": "Sign up with facebook",
+    "@signUpWithFacebook":{
+        "description": "On Boarding first page second line"
+    },
+    "signUpWithGoogle": "Sign up with google",
+    "@signUpWithGoogle":{
+        "description": "On Boarding first page second line"
+    },
+    "signUpWithApple": "Sign up with apple",
+    "@signUpWithApple":{
+        "description": "On Boarding first page second line"
+    },
+    "emailAuthDesc": "Filling in personal details,for registration and authentication",
+    "@emailAuthDesc":{
+        "description": "On Boarding first page second line"
+    },
+    "next": "Next",
+    "@next":{
+        "description": "On Boarding first page second line"
+    },
+    "fullName": "Full name",
+    "@fullName":{
+        "description": "On Boarding first page second line"
+    },
+    "emailAddress": "Email address",
+    "@emailAddress":{
+        "description": "On Boarding first page second line"
+    },
+    "password": "Password",
+    "@password":{
+        "description": "On Boarding first page second line"
+    },
+    "reEnterPassword": "Enter password again",
+    "@reEnterPassword":{
+        "description": "On Boarding first page second line"
+    },
+    "forgotPassword": "Forgot your password?",
+    "@forgetPassword":{
+        "description": "On Boarding first page second line"
+    },
+    "signIn": "Sign in",
+    "@signIn":{
+        "description": "On Boarding first page second line"
+    },
+    "signUp": "Sign up",
+    "@signUp":{
+        "description": "On Boarding first page second line"
+    },
+    "signInWith": "Sign in with",
+    "@signInWith":{
+        "description": "On Boarding first page second line"
+    },
+    "signUpWith": "Sign up with",
+    "@signUpWith":{
+        "description": "On Boarding first page second line"
+    },
+    "resetPassword": "Reset password",
+    "@resetPassword":{
+        "description": "On Boarding first page second line"
+    },
+    "done": "Done",
+    "@done":{
+        "description": "On Boarding first page second line"
+    },
+    "searchProduct": "Search product...",
+    "@searchProduct":{
+        "description": "On Boarding first page second line"
+    },
+    "profileNoData": "You still have not filled this detail.",
+    "@profileNoData":{
+        "description": "On Boarding first page second line"
+    },
+    "signUpSystem": "Sign up",
+    "@profileNoData":{
+        "description": "On Boarding first page second line"
+    },
+    "emailAddressValidation": "Please enter a valid email address",
+    "@emailAddressValidation":{
+        "description": "On Boarding first page second line"
+    },
+    "fullNameValidation": "Please enter your full name",
+    "@fullNameValidation":{
+        "description": "On Boarding first page second line"
+    },
+    "passwordValidation": "Please enter a password with at least 8 charceters, one upper case, one lower case and one digit.",
+    "@passwordValidation":{
+        "description": "On Boarding first page second line"
+    },
+    "reEnterPasswordValidation": "Passwords must match",
+    "@reEnterPasswordValidation":{
+        "description": "On Boarding first page second line"
+    },
+    "emailAddressExists": "This Email Address already exists.",
+    "@emailAddressExists":{
+        "description": "On Boarding first page second line"
+    },
+    "wrongEmailAddressFormat": "Wrong email format",
+    "@wrongEmailAddressFormat":{
+        "description": "On Boarding first page second line"
+    },
+    "invalidPassword": "Invalid password",
+    "@invalidPassword":{
+        "description": "On Boarding first page second line"
+    },
+    "noUsersFound": "No users found with this email address.",
+    "@noUsersFound":{
+        "description": "On Boarding first page second line"
+    },
+    "noEmailAddressExists": "Email address not found",
+    "@noEmailAddressExists":{
+        "description": "On Boarding first page second line"
+    },
+    "back": "Back",
+    "@back":{
+        "description": "On Boarding first page second line"
+    },
+    "sendResetEmail": "Send Reset Email",
+    "@sendResetEmail":{
+        "description": "On Boarding first page second line"
+    },
+    "userAlreadyExists": "User already exists! Please sign in.",
+    "@userAlreadyExists":{
+        "description": "On Boarding first page second line"
+    },
+    "male": "Male",
+    "@male":{
+        "description": "On Boarding first page second line"
+    },
+    "female": "Female",
+    "@female":{
+        "description": "On Boarding first page second line"
+    },
+    "other": "Other",
+    "@other":{
+        "description": "On Boarding first page second line"
+    },
+    "optionA": "Option A",
+    "@optionA":{
+        "description": "On Boarding first page second line"
+    },
+    "optionB": "Option B",
+    "@optionB":{
+        "description": "On Boarding first page second line"
+    },
+    "optionC": "Option C",
+    "@optionC":{
+        "description": "On Boarding first page second line"
+    },
+    "choose": "Choose",
+    "@choose":{
+        "description": " On Boarding first page second line"
+    },
+    "missingField": "Complete missing fields",
+    "@missingField":{
+        "description": "On Boarding first page second line"
+    },
+    "intakeRecords": "Intake questionnaires records",
+    "@intakeRecords":{
+        "description": "On Boarding first page second line"
+    },
+    "close": "Close",
+    "@close":{
+        "description": "On Boarding first page second line"
+    },
+    "hads": "HADS (Hospitalization Anxiety and Depression)",
+    "@hads":{
+        "description": "On Boarding first page second line"
+    },
+    "addiction": "Addiction questionnaire",
+    "@addiction":{
+        "description": "On Boarding first page second line"
+    },
+    "intake": "Intake Questionnaire",
+    "@intake":{
+        "description": "On Boarding first page second line"
+    },
+    "questionnaireAnswered": "Questionnaire answered",
+    "@questionnaireAnswered":{
+        "description": "On Boarding first page second line"
+    },
+    "indicationIndex": "Indication index",
+    "@indicationIndex":{
+        "description": "On Boarding first page second line"
+    },
+    "nutrition": "Nutrition",
+    "@nutrition":{
+        "description": "On Boarding first page second line"
+    },
+    "howSevereBefore": "How severe your symptoms prior to consuming cannabis?",
+    "@howSevereBefore":{
+        "description": "On Boarding first page second line"
+    },
+    "howSevereAfter": "How severe your symptoms after consuming cannabis?",
+    "@howSevereAfter":{
+        "description": "On Boarding first page second line"
+    },
+    "intakeQuestionExplain": "1 - the pain is unbearable, 5 - no pain at all",
+    "@intakeQuestionExplain":{
+        "description": "On Boarding first page second line"
+    },
+    "whatProduct": "What product are you currenty consuming?",
+    "@whatProduct":{
+        "description": "On Boarding first page second line"
+    },
+    "howAreYouConsuming": "How are you currenty consuming your cannabis?",
+    "@howAreYouConsuming":{
+        "description": "On Boarding first page second line"
+    },
+    "vaping": "Vaping",
+    "@vaping":{
+        "description": "On Boarding first page second line"
+    },
+    "smoking": "Smoking",
+    "@whatProduct":{
+        "description": "On Boarding first page second line"
+    },
+    "oil": "Oil",
+    "@oil":{
+        "description": "On Boarding first page second line"
+    },
+    "continueButton": "Continue",
+    "@continueButton":{
+        "description": "On Boarding first page second line"
+    },
+    "grams": "gr",
+    "@grams":{
+        "description": "On Boarding first page second line"
+    },
+    "drops": "Drops",
+    "@drops":{
+        "description": "On Boarding first page second line"
+    },
+    "howMuchConsuming": "How much are you currenty consuming?",
+    "@howMuchConsuming":{
+        "description": "On Boarding first page second line"
+    },
+    "drops": "Drops",
+    "@drops":{
+        "description": "On Boarding first page second line"
+    },
+    "wouldYouLikeToLogYourSession": "Would you like to log your session now or receive a reminder later?",
+    "@wouldYouLikeToLogYourSession":{
+        "description": "On Boarding first page second line"
+    },
+    "reminedMeLater": "Remined me later",
+    "@reminedMeLater":{
+        "description": "On Boarding first page second line"
+    },
+    "now": "Now",
+    "@now":{
+        "description": "On Boarding first page second line"
+    },
+    "goodJob": "Good job! See you soon again",
+    "@drops":{
+        "description": "On Boarding first page second line"
+    },
+    "finish": "Finish",
+    "@finish":{
+        "description": "On Boarding first page second line"
+    },
+    "remission": "Remission",
+    "@remission":{
+        "description": "On Boarding first page second line"
+    },
+    "mildDisease": "Mild disease",
+    "@mildDisease":{
+        "description": "On Boarding first page second line"
+    },
+    "moderateDisease": "Moderate disease",
+    "@moderateDisease":{
+        "description": "On Boarding first page second line"
+    },
+    "severeDisease": "Sever disease",
+    "@severeDisease":{
+        "description": "On Boarding first page second line"
+    },
+    "soFar": "so far",
+    "@soFar":{
+        "description": "On Boarding first page second line"
+    },
+    "physicalStatistics": "Physical statistics",
+    "@physicalStatistics":{
+        "description": "On Boarding first page second line"
+    },
+    "consumptionTracking": "Consumption tracking",
+    "@consumptionTracking":{
+        "description": "On Boarding first page second line"
+    },
+    "noRecords": "No records for this day",
+    "@noRecords":{
+        "description": "On Boarding first page second line"
+    },
+    "reminder": "Reminder",
+    "@reminder":{
+        "description": "On Boarding first page second line"
+    },
+    "questionnaireCompletion": "Questionnaire completion",
+    "@questionnaireCompletion":{
+        "description": "On Boarding first page second line"
+    },
+    "questionnaireCompletionDesc": "You need to complete this questionnaire before you can continue.",
+    "@questionnaireCompletionDesc":{
+        "description": "On Boarding first page second line"
+    },
+    "willBeAvailable": "Will be available after you answer the first questionnaire",
+    "@willBeAvailable":{
+        "description": "On Boarding first page second line"
+    },
+    "termsOfUse": "Terms of use",
+    "@termsOfUse":{
+        "description": "On Boarding first page second line"
+    },
+    "privacyPolicy": "Privacy policy",
+    "@privacyPolicy":{
+        "description": "On Boarding first page second line"
+    },
+    "iAgree": "I agree to the Terms of use and Privacy policy",
+    "@iAgree":{
+        "description": "On Boarding first page second line"
+    },
+    "chooseProducts": "Choose products",
+    "@chooseProducts":{
+        "description": "On Boarding first page second line"
+    },
+    "homePage": "Home page",
+    "@homePage":{
+        "description": "On Boarding first page second line"
+    },
+    "chatBot": "Chat bot",
+    "@chatBot":{
+        "description": "On Boarding first page second line"
+    },
+    "stories": "Stories",
+    "@stories":{
+        "description": "On Boarding first page second line"
+    },
+    "medicalStatistics": "Medical statistics",
+    "@medicalStatistics":{
+        "description": "On Boarding first page second line"
+    },
+    "save": "Save",
+    "@save":{
+        "description": "On Boarding first page second line"
+    },
+    "exit": "Exit",
+    "@exit":{
+        "description": "On Boarding first page second line"
+    },
+    "leemaAi": "leema.ai",
+    "@leemaAi":{
+        "description": "On Boarding first page second line"
+    },
+    "welcomeDesc": "Welcome to the leema family! In order for us to help you improve your quality of life - we would like to get to know you a little better",
+    "@welcomeDesc":{
+        "description": "On Boarding first page second line"
+    },
+    "doneQuestionnaire": "Done!",
+    "@doneQuestionnaire":{
+        "description": "On Boarding first page second line"
+    },
+    "gallery": "Gallery",
+    "@gallery":{
+        "description": "On Boarding first page second line"
+    },
+    "camera": "Camera",
+    "@doneQuestionnaire":{
+        "description": "On Boarding first page second line"
+    },
+    "removeImage": "Remove image",
+    "@removeImage":{
+        "description": "On Boarding first page second line"
+    },
+    "reminderDesc15": "We'll remind you in 15 minutes",
+    "@removeImage":{
+        "description": "On Boarding first page second line"
+    },
+    "reminderDesc60": "We'll remind you in 60 minutes",
+    "@removeImage":{
+        "description": "On Boarding first page second line"
+    }
+}
