@@ -312,11 +312,6 @@ class _MeasureState extends State<Measure> {
     ]);
     chosenMonth = months[0];
 
-    print('filldata chosenMonth ${chosenMonth}');
-
-
-
-
     bool isShowingMonth = !(chosenMonth ==
         (garminServices.garminSentences['ChooseMonth'] ?? 'Choose month'));
 

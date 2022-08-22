@@ -28,11 +28,11 @@ import '../../widgets/app_icon.dart';
 import '../../globals.dart' as globals;
 
 class HomePage extends StatefulWidget {
-
   final String name;
 
-  static bool isNewUser=false;
-  HomePage({Key? key,this.name=''}) : super(key: key);
+  static bool isNewUser = false;
+
+  HomePage({Key? key, this.name = ''}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -60,36 +60,36 @@ class _HomePageState extends State<HomePage> {
 
   WeekBar? clickedWeekBar;
   late List<UserStats> myUsers;
-  late List<Record> recordsQ=[];
+  late List<Record> recordsQ = [];
   bool isShowingMonth = false;
-  late final Products productsModel ;
+  late final Products productsModel;
   late final Questionnaires questionnaireModel;
   late final garminServices;
- late String  ?chosenPatientMail;
-
+  late String? chosenPatientMail;
 
   @override
   void initState() {
     productsModel = Provider.of<Products>(context, listen: false);
     questionnaireModel = Provider.of<Questionnaires>(context, listen: false);
-     garminServices = Provider.of<GarminServices>(context, listen: false);
+    garminServices = Provider.of<GarminServices>(context, listen: false);
 
     getAllPatients();
 
-    chosenMonth= garminServices.garminSentences['ChooseMonth'] ?? 'Choose month';
-     isShowingMonth = !(chosenMonth ==
+    chosenMonth =
+        garminServices.garminSentences['ChooseMonth'] ?? 'Choose month';
+    isShowingMonth = !(chosenMonth ==
         (garminServices.garminSentences['ChooseMonth'] ?? 'Choose month'));
 
-     getQuestionnaires();
+    getQuestionnaires();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
- print(' home page build');
+    print(' home page build');
     var screenSize = MediaQuery.of(context).size;
     return Directionality(
-      textDirection:  TextDirection.ltr,
+      textDirection: TextDirection.ltr,
       child: Scaffold(
           appBar: AppBar(
             centerTitle: true,
@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
                 Container(
                     padding: const EdgeInsets.only(left: 20),
                     child: Text(
-                     widget.name,
+                      widget.name,
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ))
               ],
@@ -132,10 +132,11 @@ class _HomePageState extends State<HomePage> {
               )
             ],
           ),
-          body:  isLoadingPatients || isLoadingQ
+          body: isLoadingPatients || isLoadingQ
               ? const Center(
-            child: CircularProgressIndicator(),
-          ) :Directionality(
+                  child: CircularProgressIndicator(),
+                )
+              : Directionality(
                   textDirection: TextDirection.rtl,
                   child: Row(
                     children: [
@@ -144,34 +145,17 @@ class _HomePageState extends State<HomePage> {
                         color: const Color.fromRGBO(234, 240, 254, 1),
                         child: Column(
                           children: [
-                            PersonalDetails(mail: chosenPatientMail??''),
+                            PersonalDetails(mail: chosenPatientMail ?? ''),
                             SizedBox(height: 20),
-                             Expanded(child:  Chat( ))
+                          //  Expanded(child: Chat())
                           ],
                         ),
                       ),
                       Expanded(
                         child: Container(
-                          color: Colors.white,
-                          // do not add const , make problems in state
-                          child: Measure()
-                          // child: ListView(
-                          //   controller: ScrollController(),
-                          //   // crossAxisAlignment: CrossAxisAlignment.start,
-                          //   // mainAxisSize: MainAxisSize.max,
-                          //   children: [
-                          //     Padding(
-                          //       padding: EdgeInsets.only(top: 30),
-                          //       child: Text('המטופל ביחס לטיפול',
-                          //           style: TextStyle(
-                          //               color: Color.fromRGBO(78, 122, 199, 1),
-                          //               fontSize: 20,
-                          //               fontWeight: FontWeight.w600)),
-                          //     ),
-                         // Measure()
-                         //    ],
-                         // ),
-                        ),
+                            color: Colors.white,
+                            // do not add const , make problems in state
+                            child: Measure()),
                       ),
                       Container(
                         width: screenSize.width * 0.25,
@@ -179,22 +163,19 @@ class _HomePageState extends State<HomePage> {
                         padding: EdgeInsets.only(top: 10),
                         child: Column(
                           children: [
-                            Text('שאלונים אחרונים',style: TextStyle(
-                  color: Color.fromRGBO(78, 122, 199, 1),
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600)),
-                            Expanded(
-                                child: RecordsGrid(records: recordsQ)
-                            ),
-                            Expanded(
-                                child: userList)
+                            Text('שאלונים אחרונים',
+                                style: TextStyle(
+                                    color: Color.fromRGBO(78, 122, 199, 1),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600)),
+                            Expanded(child: RecordsGrid(records: recordsQ)),
+                            Expanded(child: userList)
                           ],
                         ),
                       )
                     ],
                   ),
-                )
-              ),
+                )),
     );
   }
 
@@ -202,32 +183,25 @@ class _HomePageState extends State<HomePage> {
     final data = await FirebaseFirestore.instance.collection("Users").get();
 
     print("length ${data.docs.length}");
-    // DocumentSnapshot document = data.docs[0];
-    // print('ggg ' + document['email']);
+    myUsers = [];
 
-    // globals.chosenPatientId= listUser.where((element) => element.id=='aKlMIacPx9TQOeVb3cDFWZOfRpf2') as String?;
-
-      myUsers=[];
-
-    for(DocumentSnapshot user in data.docs)
-      {
-         myUsers.add(UserStats(user.id,user['email'], await checkGarmin(user.id)));
-      }
-    globals.chosenPatientId=myUsers[0].id;
-    chosenPatientMail=myUsers[0].email;
+    for (DocumentSnapshot user in data.docs) {
+      myUsers
+          .add(UserStats(user.id, user['email'], await checkGarmin(user.id)));
+    }
+    globals.chosenPatientId = myUsers[0].id;
+    chosenPatientMail = myUsers[0].email;
     print('hhhh ${globals.chosenPatientId}');
-    userList=UserList(
-        myUsers:  myUsers,
-        onChoose:(user,mail){
-          setChosenPatient(user,mail);});
+    userList = UserList(
+        myUsers: myUsers,
+        onChoose: (user, mail) {
+          setChosenPatient(user, mail);
+        });
     getQuestionnaires();
-    isLoadingPatients=false;
-
-    // setState(() {});
+    isLoadingPatients = false;
   }
 
- Future<bool> checkGarmin(String userId) async
-  {
+  Future<bool> checkGarmin(String userId) async {
     try {
       final data = await FirebaseFirestore.instance
           .collection('GarminData')
@@ -235,34 +209,28 @@ class _HomePageState extends State<HomePage> {
           .get();
       if (data.exists && data.data() != null) {
         Map<String, dynamic> records = data.data()!;
-        DateTime now= DateTime.now();
-        DateTime yesterdayDate= DateTime.now().subtract(const Duration(hours: 24));
-        String today= '${now.day}-${now.month}-${now.year}';
-        String yesterday= '${yesterdayDate.day}-${yesterdayDate.month}-${yesterdayDate.year}';
-   //  print('today $today');
-   //  print('yesterday $yesterday');
+        DateTime now = DateTime.now();
+        DateTime yesterdayDate =
+            DateTime.now().subtract(const Duration(hours: 24));
+        String today = '${now.day}-${now.month}-${now.year}';
+        String yesterday =
+            '${yesterdayDate.day}-${yesterdayDate.month}-${yesterdayDate.year}';
 
         for (var key in records.keys) {
           if (key == 'firstFetch') continue;
 
-          if(key==today || key==yesterday)
-            {
-
-              return true;
-            }
+          if (key == today || key == yesterday) {
+            return true;
+          }
         }
-
-       }
+      }
 
       return false;
-    }
-     catch (e) {
+    } catch (e) {
       print('Error fetching garmin data: $e');
       return false;
     }
-
   }
-
 
   Bar? findDay(DateTime day, List<Bar> barss) {
     for (var bar in barss) {
@@ -289,35 +257,31 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
-   setChosenPatient(String id,String mail)
-  {
+  setChosenPatient(String id, String mail) {
     //setState is called when getQuestionnaires is fetched
-  //   setState(() {
-       globals.chosenPatientId=id;
-       HomePage.isNewUser=true;
-       chosenPatientMail=mail;
-       print("jjj ${globals.chosenPatientId}");
-       isLoadingQ=true;
-       questionnaireModel.clearData();
-       getQuestionnaires();
-  //   });
+    //   setState(() {
+    globals.chosenPatientId = id;
+    HomePage.isNewUser = true;
+    chosenPatientMail = mail;
+    print("jjj ${globals.chosenPatientId}");
+    isLoadingQ = true;
+    questionnaireModel.clearData();
+    getQuestionnaires();
+    //   });
   }
 
-  Future<void>  getQuestionnaires()  async{
+  Future<void> getQuestionnaires() async {
     recordsQ.clear();
     print('===getQuestionnaires===');
     await questionnaireModel.fetchRecords();
-     for (var record in questionnaireModel.records
-         .where(
-             (element) => element.questionnaireName == 'Intake Questionnaire')
-         .toList()) {
-
-         if (!recordsQ.contains(record)) {
-           recordsQ.add(record);
-         }
-       }
-     isLoadingQ=false;
-     setState(() {});
-     }
-   }
-
+    for (var record in questionnaireModel.records
+        .where((element) => element.questionnaireName == 'Intake Questionnaire')
+        .toList()) {
+      if (!recordsQ.contains(record)) {
+        recordsQ.add(record);
+      }
+    }
+    isLoadingQ = false;
+    setState(() {});
+  }
+}
