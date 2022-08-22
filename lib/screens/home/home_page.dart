@@ -12,6 +12,7 @@ import 'package:dashboard_doctors/screens/login/login_page.dart';
 import 'package:dashboard_doctors/services/garmin_services.dart';
 import 'package:dashboard_doctors/widgets/consumption_graph.dart';
 import 'package:dashboard_doctors/widgets/consumption_table.dart';
+import 'package:dashboard_doctors/widgets/home/chat_doctor/chat.dart';
 import 'package:dashboard_doctors/widgets/home/graph.dart';
 import 'package:dashboard_doctors/widgets/home/measures.dart';
 import 'package:dashboard_doctors/widgets/home/personalDeatails.dart';
@@ -144,6 +145,8 @@ class _HomePageState extends State<HomePage> {
                         child: Column(
                           children: [
                             PersonalDetails(mail: chosenPatientMail??''),
+                            SizedBox(height: 20),
+                             Expanded(child:  Chat( ))
                           ],
                         ),
                       ),
@@ -244,9 +247,7 @@ class _HomePageState extends State<HomePage> {
 
           if(key==today || key==yesterday)
             {
-              print('=======');
-              print('id $userId');
-              print('key $key');
+
               return true;
             }
         }

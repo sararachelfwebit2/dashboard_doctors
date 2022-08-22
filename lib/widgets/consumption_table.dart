@@ -43,7 +43,7 @@ class _ConsumptionTableState extends State<ConsumptionTable> {
     bool isHebrew = AppLocalizations.of(context)!.languageName == 'Hebrew';
     final garminServices = Provider.of<GarminServices>(context, listen: false);
     var screenSize = MediaQuery.of(context).size;
-
+ScrollController controller=new ScrollController();
     List<Widget> children2 = [
       Row(
         textDirection: isHebrew ? TextDirection.rtl : TextDirection.ltr,
@@ -56,7 +56,7 @@ class _ConsumptionTableState extends State<ConsumptionTable> {
             child: Center(
               child: Text(
                 garminServices.garminSentences['Date'] ?? '',
-                style: titleStyle,
+                style: titleStyle.copyWith(fontSize:isHebrew?16:13 ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -67,7 +67,7 @@ class _ConsumptionTableState extends State<ConsumptionTable> {
             child: Center(
               child: Text(
                 garminServices.garminSentences['Hour'] ?? '',
-                style: titleStyle,
+                style: titleStyle.copyWith(fontSize:isHebrew?16:13 ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -78,7 +78,7 @@ class _ConsumptionTableState extends State<ConsumptionTable> {
             child: Center(
               child: Text(
                 garminServices.garminSentences['Product picture'] ?? '',
-                style: titleStyle,
+                style: titleStyle.copyWith(fontSize:isHebrew?16:13 ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -89,7 +89,7 @@ class _ConsumptionTableState extends State<ConsumptionTable> {
             child: Center(
               child: Text(
                 garminServices.garminSentences['Product name'] ?? '',
-                style: titleStyle,
+                style: titleStyle.copyWith(fontSize:isHebrew?16:13 ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -100,7 +100,7 @@ class _ConsumptionTableState extends State<ConsumptionTable> {
             child: Center(
               child: Text(
                 garminServices.garminSentences['Product category'] ?? '',
-                style: titleStyle,
+                style: titleStyle.copyWith(fontSize:isHebrew?16:13 ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -111,7 +111,7 @@ class _ConsumptionTableState extends State<ConsumptionTable> {
             child: Center(
               child: Text(
                 garminServices.garminSentences['Type'] ?? '',
-                style: titleStyle,
+                style: titleStyle.copyWith(fontSize:isHebrew?16:13 ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -122,7 +122,7 @@ class _ConsumptionTableState extends State<ConsumptionTable> {
             child: Center(
               child: Text(
                 garminServices.garminSentences['Character'] ?? '',
-                style: titleStyle,
+                style: titleStyle.copyWith(fontSize:isHebrew?16:13 ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -133,7 +133,7 @@ class _ConsumptionTableState extends State<ConsumptionTable> {
             child: Center(
               child: Text(
                 garminServices.garminSentences['Consumed quantity'] ?? '',
-                style: titleStyle,
+                style: titleStyle.copyWith(fontSize:isHebrew?16:13 ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -144,7 +144,7 @@ class _ConsumptionTableState extends State<ConsumptionTable> {
             child: Center(
               child: Text(
                 garminServices.garminSentences['Consumption method'] ?? '',
-                style: titleStyle,
+                style: titleStyle.copyWith(fontSize:isHebrew?16:13 ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -178,7 +178,11 @@ class _ConsumptionTableState extends State<ConsumptionTable> {
       ),
     ];
     children2.addAll(buildConsumptionsRows());
-
+    if(!isHebrew)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller
+          .animateTo(controller.position.maxScrollExtent,
+          duration: Duration(seconds: 1), curve: Curves.ease);});
     return Column(
       children: [
         const SizedBox(height: 20),
@@ -203,6 +207,8 @@ class _ConsumptionTableState extends State<ConsumptionTable> {
              SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
 
+
+controller: controller,
                 // child: Container(
                 //   constraints: BoxConstraints(maxWidth: screenSize.width*0.55, maxHeight: screenSize.height*0.3),
                   child: Column(
