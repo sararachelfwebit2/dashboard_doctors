@@ -17,6 +17,7 @@ import 'package:dashboard_doctors/widgets/home/graph.dart';
 import 'package:dashboard_doctors/widgets/home/measures.dart';
 import 'package:dashboard_doctors/widgets/home/personalDeatails.dart';
 import 'package:dashboard_doctors/widgets/home/records/records_grid.dart';
+import 'package:dashboard_doctors/widgets/home/records/send_recommendation.dart';
 import 'package:dashboard_doctors/widgets/home/user_list.dart';
 import 'package:dashboard_doctors/widgets/webImage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../widgets/app_icon.dart';
 import '../../globals.dart' as globals;
 
@@ -51,6 +53,8 @@ class _HomePageState extends State<HomePage> {
   List<DateTime> presentWeek = [];
   late User chossenUser;
   late UserList userList;
+  late Stream<QuerySnapshot> _myStream;
+
 
   Bar? clickedBar;
 
@@ -65,7 +69,8 @@ class _HomePageState extends State<HomePage> {
   late final Products productsModel;
   late final Questionnaires questionnaireModel;
   late final garminServices;
-  late String? chosenPatientMail;
+  late String chosenPatientMail = "";
+  late Chat chat;
 
   @override
   void initState() {
@@ -98,7 +103,8 @@ class _HomePageState extends State<HomePage> {
             title: Row(
               children: [
                 OutlinedButton(
-                  child: Text('התנתק', style: TextStyle(color: Colors.red)),
+                  child:
+                      const Text('התנתק', style: TextStyle(color: Colors.red)),
                   onPressed: () async {
                     await FirebaseAuth.instance.signOut();
                     Navigator.of(context).pushAndRemoveUntil(
@@ -111,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.only(left: 20),
                     child: Text(
                       widget.name,
-                      style: TextStyle(color: Colors.white, fontSize: 20),
+                      style: const TextStyle(color: Colors.white, fontSize: 20),
                     ))
               ],
             ),
@@ -121,7 +127,7 @@ class _HomePageState extends State<HomePage> {
               Align(
                 alignment: Alignment.topRight,
                 child: Padding(
-                  padding: EdgeInsets.only(right: 30, top: 10),
+                  padding: const EdgeInsets.only(right: 30, top: 10),
                   child: Image.asset(
                     // 'assets/icons/leema-icon.png',
                     'assets/icons/leema-logo.png',
@@ -146,8 +152,8 @@ class _HomePageState extends State<HomePage> {
                         child: Column(
                           children: [
                             PersonalDetails(mail: chosenPatientMail ?? ''),
-                            SizedBox(height: 20),
-                          //  Expanded(child: Chat())
+                            const SizedBox(height: 20),
+                              Expanded(child:chat )
                           ],
                         ),
                       ),
@@ -160,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                       Container(
                         width: screenSize.width * 0.25,
                         color: MyColors.backgroundColor,
-                        padding: EdgeInsets.only(top: 10),
+                        padding: const EdgeInsets.only(top: 10),
                         child: Column(
                           children: [
                             Text('שאלונים אחרונים',
@@ -168,8 +174,10 @@ class _HomePageState extends State<HomePage> {
                                     color: Color.fromRGBO(78, 122, 199, 1),
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600)),
-                            Expanded(child: RecordsGrid(records: recordsQ)),
-                            Expanded(child: userList)
+                            Expanded(
+                                flex: 1, child: RecordsGrid(records: recordsQ)),
+                            Expanded(flex: 1, child: SendRecommendation()),
+                            Expanded(flex: 2, child: userList)
                           ],
                         ),
                       )
@@ -191,6 +199,8 @@ class _HomePageState extends State<HomePage> {
     }
     globals.chosenPatientId = myUsers[0].id;
     chosenPatientMail = myUsers[0].email;
+    _myStream=fetchData();
+    chat= Chat(myStream: _myStream);
     print('hhhh ${globals.chosenPatientId}');
     userList = UserList(
         myUsers: myUsers,
@@ -257,17 +267,29 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
-  setChosenPatient(String id, String mail) {
+  setChosenPatient(String id, String mail) async {
     //setState is called when getQuestionnaires is fetched
     //   setState(() {
     globals.chosenPatientId = id;
     HomePage.isNewUser = true;
     chosenPatientMail = mail;
     print("jjj ${globals.chosenPatientId}");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("selectedPatient", globals.chosenPatientId ?? "");
+  _myStream=fetchData();
+  chat=Chat(myStream: _myStream);
     isLoadingQ = true;
     questionnaireModel.clearData();
     getQuestionnaires();
     //   });
+  }
+
+  Stream<QuerySnapshot> fetchData()
+  {
+    return FirebaseFirestore.instance
+        .collection('chats/${globals.chosenPatientId}/messages')
+        .orderBy('createdAt', descending: true)
+        .snapshots();
   }
 
   Future<void> getQuestionnaires() async {

@@ -13,12 +13,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Measure extends StatefulWidget {
-
-
   const Measure({
-    Key? key,}) : super(key: key);
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<Measure> createState() => _MeasureState();
@@ -58,32 +58,13 @@ class _MeasureState extends State<Measure> {
     chosenMonth =
         garminServices.garminSentences['ChooseMonth'] ?? 'Choose month';
 
-
     fillData();
-
-    // months.addAll([
-    //   garminServices.garminSentences['ChooseMonth'] ?? 'Choose month',
-    //   garminServices.garminSentences['January'] ?? 'January',
-    //   garminServices.garminSentences['February'] ?? 'February',
-    //   garminServices.garminSentences['March'] ?? 'March',
-    //   garminServices.garminSentences['April'] ?? 'April',
-    //   garminServices.garminSentences['May'] ?? 'May',
-    //   garminServices.garminSentences['June'] ?? 'June',
-    //   garminServices.garminSentences['July'] ?? 'July',
-    //   garminServices.garminSentences['August'] ?? 'August',
-    //   garminServices.garminSentences['September'] ?? 'September',
-    //   garminServices.garminSentences['October'] ?? 'October',
-    //   garminServices.garminSentences['November'] ?? 'November',
-    //   garminServices.garminSentences['December'] ?? 'December'
-    // ]);
-    // chosenMonth = months[0];
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print('measure build');
     if (HomePage.isNewUser) {
       HomePage.isNewUser = false;
       isLoadingGragh = true;
@@ -94,93 +75,100 @@ class _MeasureState extends State<Measure> {
         (garminServices.garminSentences['ChooseMonth'] ?? 'Choose month'));
 
     var screenSize = MediaQuery.of(context).size;
-    return  Container(
-            height: screenSize.height,
-           width: screenSize.width,
-            margin: const EdgeInsets.only(right: 3, left: 3),
-            // padding: const EdgeInsets.only(right: 35),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  offset: Offset(0, 8),
-                  blurRadius: 10,
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 30,right: 35),
-                  child: Text('המטופל ביחס לטיפול',
-                      style: TextStyle(
-                          color: Color.fromRGBO(78, 122, 199, 1),
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600)),
-                ),
-                isLoadingGragh
-                    ? const Expanded(child
-                    : Center(child: CircularProgressIndicator()))
-                    : Expanded(
-                      child: ListView(
-                  shrinkWrap: true,
-                  controller: ScrollController(),
-                  children: [
+    return Container(
+      height: screenSize.height,
+      width: screenSize.width,
+      margin: const EdgeInsets.only(right: 3, left: 3),
+      // padding: const EdgeInsets.only(right: 35),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            offset: Offset(0, 8),
+            blurRadius: 10,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(top: 30, right: 35),
+            child: Text('המטופל ביחס לטיפול',
+                style: TextStyle(
+                    color: Color.fromRGBO(78, 122, 199, 1),
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600)),
+          ),
+          isLoadingGragh
+              ? const Expanded(
+                  child: Center(child: CircularProgressIndicator()))
+              : Expanded(
+                  child: ListView(
+                    shrinkWrap: true,
+                    controller: ScrollController(),
+                    children: [
                       const SizedBox(height: 15),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          ElevatedButton(
+                          /*ElevatedButton(
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith<Color>(
                                       (states) => Colors.transparent),
-                              overlayColor: MaterialStateProperty.resolveWith<Color>(
+                              overlayColor:
+                                  MaterialStateProperty.resolveWith<Color>(
                                 ((states) => Colors.transparent),
                               ),
-                              shadowColor: MaterialStateProperty.resolveWith<Color>(
+                              shadowColor:
+                                  MaterialStateProperty.resolveWith<Color>(
                                 ((states) => Colors.transparent),
                               ),
                             ),
                             onPressed: () async {
                               DateTime? newFirstDay = await showDatePicker(
-                                  // fontFamily: 'NunitoSans',
-                                  // description: garminServices.garminSentences[
-                                  // 'ChooseStartDayToShowData'] ??
-                                  //     'Choose Start Day To Show Data',
-                                  // height: 350,
-                                  context: context,
-                                  initialDate: presentWeek.first,
-                                  firstDate: DateTime.now()
-                                      .subtract(const Duration(days: 120)),
-                                  lastDate:
-                                  DateTime.now().subtract(const Duration(days: 6)),
-
+                                // fontFamily: 'NunitoSans',
+                                // description: garminServices.garminSentences[
+                                // 'ChooseStartDayToShowData'] ??
+                                //     'Choose Start Day To Show Data',
+                                // height: 350,
+                                context: context,
+                                initialDate: presentWeek.first,
+                                firstDate: DateTime.now()
+                                    .subtract(const Duration(days: 120)),
+                                lastDate: DateTime.now()
+                                    .subtract(const Duration(days: 6)),
                               );
 
                               if (newFirstDay != null) {
                                 newFirstDay = DateTime(newFirstDay.year,
                                     newFirstDay.month, newFirstDay.day);
-                                DateTime last =
-                                newFirstDay.add(const Duration(hours: 24 * 6));
+                                DateTime last = newFirstDay
+                                    .add(const Duration(hours: 24 * 6));
                                 presentWeek = [
                                   DateTime(newFirstDay.year, newFirstDay.month,
                                       newFirstDay.day),
                                   newFirstDay.add(const Duration(hours: 24)),
-                                  newFirstDay.add(const Duration(hours: 24 * 2)),
-                                  newFirstDay.add(const Duration(hours: 24 * 3)),
-                                  newFirstDay.add(const Duration(hours: 24 * 4)),
-                                  newFirstDay.add(const Duration(hours: 24 * 5)),
-                                  newFirstDay.add(const Duration(hours: 24 * 6)),
+                                  newFirstDay
+                                      .add(const Duration(hours: 24 * 2)),
+                                  newFirstDay
+                                      .add(const Duration(hours: 24 * 3)),
+                                  newFirstDay
+                                      .add(const Duration(hours: 24 * 4)),
+                                  newFirstDay
+                                      .add(const Duration(hours: 24 * 5)),
+                                  newFirstDay
+                                      .add(const Duration(hours: 24 * 6)),
                                   // DateTime(last.year, last.month, last.day, 23, 59, 59,
                                   //     999, 999),
                                 ];
 
-                                chosenMonth =
-                                    garminServices.garminSentences['ChooseMonth'] ??
-                                        'Choose month';
+                                chosenMonth = garminServices
+                                        .garminSentences['ChooseMonth'] ??
+                                    'Choose month';
                                 presentMonth.clear();
                                 clickedWeekBar = null;
                                 clickedBar = null;
@@ -200,63 +188,26 @@ class _MeasureState extends State<Measure> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ),
+                          ),*/
                           const SizedBox(width: 10),
-                          // DropdownButton<String>(
-                          //     value: chosenMonth,
-                          //     items: months
-                          //         .map(
-                          //           (item) => DropdownMenuItem<String>(
-                          //         child: Text(
-                          //           item,
-                          //           style: const TextStyle(
-                          //             fontFamily: 'NunitoSans',
-                          //             fontSize: 13,
-                          //           ),
-                          //         ),
-                          //         value: item,
-                          //       ),
-                          //     )
-                          //         .toList(),
-                          //     onChanged: (_) async {
-                          //       chosenMonth = _;
-                          //       if ((chosenMonth ==
-                          //           (garminServices.garminSentences['ChooseMonth'] ??
-                          //               'Choose month'))) {
-                          //         presentWeek.clear();
-                          //       }
-                          //       clickedBar = null;
-                          //       clickedWeekBar = null;
-                          //       isLoadingGragh = true;
-                          //       setState(() {});
-                          //       await fillData();
-                          //
-                          //       setState(() {});
-                          //     }),
                         ],
                       ),
                       Center(
-                        child: ConsumptionChart(
-                            duration: duration,
-                            bars: bars,
-                            presentWeek: presentWeek,
-                            setClickedBar:setClickedBar),
+                        child: ConsumptionChart(),
                       ),
-                      ConsumptionTable(reords: records,clickedBar: clickedBar)
-
-                  ],
+                      ConsumptionTable(),
+                    ],
+                  ),
                 ),
-                    ),
-              ],
-            ),
-          );
+        ],
+      ),
+    );
   }
 
-  // @override
-  // void didUpdateWidget(covariant oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   HomePage.isNewUser=false;
-  // }
+  setPrefs(String str) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("selectedTimePeriod", str);
+  }
 
   String showingDates() {
     final garminServices = Provider.of<GarminServices>(context, listen: false);
@@ -278,13 +229,12 @@ class _MeasureState extends State<Measure> {
     day = !isShowingMonth ? presentWeek.last.month : month;
     String endMonth = day < 10 ? '0$day' : '$day';
 
+    setPrefs("$startDay/$startMonth-$endDay/$endMonth");
     return '$startDay/$startMonth-$endDay/$endMonth';
   }
 
-
   Future<void> fillData() async {
     print('===fillData====');
-
 
     await questionnaireModel.fetchQuestionnaires(context);
     await questionnaireModel.fetchQuestions(context);
@@ -330,7 +280,7 @@ class _MeasureState extends State<Measure> {
         now.subtract(const Duration(hours: 24 * 3)),
         now.subtract(const Duration(hours: 24 * 2)),
         now.subtract(const Duration(hours: 24)),
-       // DateTime(now.year, now.month, now.day, 23, 59, 59, 999, 999),
+        // DateTime(now.year, now.month, now.day, 23, 59, 59, 999, 999),
         now
       ];
     } else {
@@ -344,7 +294,6 @@ class _MeasureState extends State<Measure> {
     }
     for (Record record in (questionnaireModel.records.where(
         (element) => element.questionnaireName == 'Intake Questionnaire'))) {
-
       if (DateTime.tryParse(record.date) == null) continue;
       DateTime recordDateTime = DateTime.parse(record.date);
       if (!isShowingMonth &&
@@ -585,7 +534,6 @@ class _MeasureState extends State<Measure> {
     clickedWeekBar = bar;
     setState(() {});
   }
-
 
   Bar? findDay(DateTime day, List<Bar> barss) {
     for (var bar in barss) {

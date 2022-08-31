@@ -9,6 +9,10 @@ import '../../../globals.dart' as globals;
 
 class Chat extends StatefulWidget {
 
+ final  Stream<QuerySnapshot> myStream;
+
+   Chat({super.key, required this.myStream});
+
 
   @override
   State<Chat> createState() => _ChatState();
@@ -39,7 +43,7 @@ class _ChatState extends State<Chat> {
             ),
           ),
            Expanded(
-              child:AllMessagesWidget()),
+              child:AllMessagesWidget(myStream: widget.myStream,)),
           Container(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             // decoration: kMessageContainerDecoration,

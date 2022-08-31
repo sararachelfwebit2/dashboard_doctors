@@ -8,8 +8,10 @@ import 'package:flutter/material.dart';
 import '../../../globals.dart' as globals;
 
 class AllMessagesWidget extends StatefulWidget {
+  final Stream<QuerySnapshot> myStream;
 
-  const AllMessagesWidget({Key? key}) : super(key: key);
+
+  const AllMessagesWidget({Key? key, required this.myStream}) : super(key: key);
 
   @override
   State<AllMessagesWidget> createState() => _AllMessagesWidgetState();
@@ -17,25 +19,24 @@ class AllMessagesWidget extends StatefulWidget {
 
 class _AllMessagesWidgetState extends State<AllMessagesWidget> with AutomaticKeepAliveClientMixin  {
   // @override
-  late Stream<QuerySnapshot> _myStream;
-
+ // late Stream<QuerySnapshot> _myStream;
+  var data;
   @override
   void initState() {
+    print('AllMessagesWidget initstate');
     super.initState();
-    _myStream=FirebaseFirestore.instance
-        .collection('chats/${globals.chosenPatientId}/messages')
-        .orderBy('createdAt', descending: true)
-        .snapshots();
+   // _myStream=fetchData();
   }
 
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
+    return
+      StreamBuilder<QuerySnapshot>(
       stream: /*FirebaseFirestore.instance
           .collection('chats/${globals.chosenPatientId}/messages')
           .orderBy('createdAt', descending: true)
-          .snapshots()*/ _myStream,
+          .snapshots()*/ widget.myStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
            List<Message> messagesList = [];
@@ -51,20 +52,6 @@ class _AllMessagesWidgetState extends State<AllMessagesWidget> with AutomaticKee
             ));
           }
 
-          // List<MessageBubble> messageWidgets = [];
-          // for (var message in messages) {
-          //   final msgText = message.data['text'];
-          //   final msgSender = message.data['sender'];
-          //   // final msgSenderEmail = message.data['senderemail'];
-          //   final currentUser = loggedInUser.displayName;
-          //
-          //   // print('MSG'+msgSender + '  CURR'+currentUser);
-          //   final msgBubble = MessageBubble(
-          //       msgText: msgText,
-          //       msgSender: msgSender,
-          //       user: currentUser == msgSender);
-          //   messageWidgets.add(msgBubble);
-          // }
           return Expanded(
             child: messagesList.isEmpty
                 ? Center(
@@ -91,6 +78,24 @@ class _AllMessagesWidgetState extends State<AllMessagesWidget> with AutomaticKee
   void dispose() {
   super.dispose();
   }
+
+  Stream<QuerySnapshot> fetchData()
+  {
+  return FirebaseFirestore.instance
+        .collection('chats/${globals.chosenPatientId}/messages')
+        .orderBy('createdAt', descending: true)
+        .snapshots();
+  }
+
+  // Stream<QuerySnapshot> getChatMessage(String groupChatId, int limit) {
+  //   return firebaseFirestore
+  //       .collection(FirestoreConstants.pathMessageCollection)
+  //       .doc(groupChatId)
+  //       .collection(groupChatId)
+  //       .orderBy(FirestoreConstants.timestamp, descending: true)
+  //       .limit(limit)
+  //       .snapshots();
+  // }
 
 
   @override

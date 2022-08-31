@@ -1,523 +1,234 @@
-import 'package:dashboard_doctors/colors.dart';
-import 'package:dashboard_doctors/models/bar.dart';
-import 'package:dashboard_doctors/models/consumption_record.dart';
-import 'package:dashboard_doctors/models/week_bar.dart';
-import 'package:dashboard_doctors/services/garmin_services.dart';
-import 'package:dashboard_doctors/customScrollBehavior.dart';
-import 'package:dashboard_doctors/widgets/webImage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
-import 'package:easy_image_viewer/easy_image_viewer.dart';
-
+import 'package:flutter/src/foundation/key.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import '../../globals.dart' as globals;
 
 class ConsumptionTable extends StatefulWidget {
-  final List<ConsumptionRecord> reords;
-  final Bar? clickedBar;
-  final WeekBar? clickedWeekBar;
-  const ConsumptionTable({
-    Key? key,
-    required this.reords,
-    required this.clickedBar,
-    this.clickedWeekBar,
-  }) : super(key: key);
+  const ConsumptionTable({Key? key}) : super(key: key);
 
   @override
   State<ConsumptionTable> createState() => _ConsumptionTableState();
 }
 
 class _ConsumptionTableState extends State<ConsumptionTable> {
-  TextStyle titleStyle = const TextStyle(
-    fontSize: 16,
-    color: MyColors.textBlueColor,
-    fontWeight: FontWeight.bold,
-    fontFamily: 'Assistant',
-  );
+  bool _isTableDataLoaded = false;
 
-  Widget spaceBetweenTitles = const SizedBox(
-    width: 10,
-  );
+  List<String> dates = ["תאריך"];
+  List<String> times = ["שעה"];
+  List<String> productNames = ["שם \n המוצר"];
+  List<String> productImages = [];
+  List<String> productDefinitions = ["קטגורית \n המוצר"];
+  List<String> productTypes = ["סוג"];
+  List<String> productKinds = ["אופי"];
+  List<String> consumedQuantities = ["כמות \n נצרכת"];
+  List<String> consumptionMethods = ["צורת \n צריכה"];
+  List<String> beforeConsumptionSeverities = ["חומרת \n לפני \n צריכה"];
+  List<String> afterConsumptionSeverities = ["חומרת \n לאחר \n צריכה"];
+  retreiveDataDB() async {
+    try {
+      //data of the selected
+      //res["email"]
+      final docSelectedPatient = FirebaseFirestore.instance
+          .collection("Users")
+          .doc(globals.chosenPatientId);
+
+      //preparing the answers in questionnaire to be presented on "פירוט שימושים" table
+      final questionnaires =
+          await docSelectedPatient.collection("Questionnaires").get();
+      for (final questionnaire in questionnaires.docs) {
+        final dateQuestionnaire = questionnaire["date"].toString();
+        Timestamp stamp = questionnaire["date"];
+        DateTime dt = stamp.toDate();
+        String d = "${dt.day}/${dt.month}/${dt.year}";
+        String t = "${dt.hour}:${dt.minute}";
+        dates.add(d);
+        times.add(t);
+        String json = questionnaire["answers"].toString();
+        json = json.substring(1);
+        json = json.substring(0, json.length - 1);
+        List<String> listAnswers = json.split(",");
+
+        for (int a = 0; a < listAnswers.length; a++) {
+          int pos = listAnswers[a].indexOf("?:");
+          String question = listAnswers[a].substring(0, pos + 2);
+          String answer =
+              listAnswers[a].substring(pos + 3, listAnswers[a].length);
+          if (question.contains("מהי צורת הצריכה?")) {
+            consumptionMethods.add(answer);
+          } else if (question.contains("מהי הכמות הנצרכת?")) {
+            consumedQuantities.add(answer);
+          } else if (question
+              .contains("מה חומרת הסימפטומים שלך לפני הצריכה?")) {
+            beforeConsumptionSeverities.add(answer);
+          } else if (question.contains("מה חומרת הסימפטומים לאחר הצריכה?")) {
+            afterConsumptionSeverities.add(answer);
+          } else if (question.contains("מה המוצר")) {
+            //preparing the used product to be presented on "פירוט שימושים" table
+            final products =
+                await FirebaseFirestore.instance.collection("Products").get();
+            //final products =
+            //  await docSelectedPatient.collection("Products").get();
+            for (final product in products.docs) {
+              if (product.id == answer) {
+                productNames.add(product.data()["productName"].toString());
+                productImages.add(product.data()["imageUrl"].toString());
+                productDefinitions
+                    .add(product.data()["productDefinition"].toString());
+                productTypes.add(product.data()["productType"].toString());
+                productKinds.add(product.data()["productKind"].toString());
+              }
+            }
+          }
+        }
+        setState(() {
+          _isTableDataLoaded = true;
+        });
+      }
+    } catch (e) {
+      print("eeeeeeeeeeeee error in retreiveDataDB()");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    bool isHebrew = AppLocalizations.of(context)!.languageName == 'Hebrew';
-    final garminServices = Provider.of<GarminServices>(context, listen: false);
     var screenSize = MediaQuery.of(context).size;
-ScrollController controller=new ScrollController();
-    List<Widget> children2 = [
-      Row(
-        textDirection: isHebrew ? TextDirection.rtl : TextDirection.ltr,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 80,
-            // height: 80,
-            height: 33,
-            child: Center(
-              child: Text(
-                garminServices.garminSentences['Date'] ?? '',
-                style: titleStyle.copyWith(fontSize:isHebrew?16:13 ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 80,
-            height: 30,
-            child: Center(
-              child: Text(
-                garminServices.garminSentences['Hour'] ?? '',
-                style: titleStyle.copyWith(fontSize:isHebrew?16:13 ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 100,
-            height: 30,
-            child: Center(
-              child: Text(
-                garminServices.garminSentences['Product picture'] ?? '',
-                style: titleStyle.copyWith(fontSize:isHebrew?16:13 ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 100,
-            height: 30,
-            child: Center(
-              child: Text(
-                garminServices.garminSentences['Product name'] ?? '',
-                style: titleStyle.copyWith(fontSize:isHebrew?16:13 ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 100,
-            height: 30,
-            child: Center(
-              child: Text(
-                garminServices.garminSentences['Product category'] ?? '',
-                style: titleStyle.copyWith(fontSize:isHebrew?16:13 ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 80,
-            height: 30,
-            child: Center(
-              child: Text(
-                garminServices.garminSentences['Type'] ?? '',
-                style: titleStyle.copyWith(fontSize:isHebrew?16:13 ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 80,
-            height: 30,
-            child: Center(
-              child: Text(
-                garminServices.garminSentences['Character'] ?? '',
-                style: titleStyle.copyWith(fontSize:isHebrew?16:13 ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 120,
-            height: 30,
-            child: Center(
-              child: Text(
-                garminServices.garminSentences['Consumed quantity'] ?? '',
-                style: titleStyle.copyWith(fontSize:isHebrew?16:13 ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 120,
-            height: 30,
-            child: Center(
-              child: Text(
-                garminServices.garminSentences['Consumption method'] ?? '',
-                style: titleStyle.copyWith(fontSize:isHebrew?16:13 ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 120,
-            height: 30,
-            child: Center(
-              child: Text(
-                garminServices.garminSentences[
-                        'Symptom severity before consumption'] ??
-                    'Symptom severity before consumption',
-                style: titleStyle.copyWith(fontSize:12 ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 120,
-            height: 30,
-            child: Center(
-              child: Text(garminServices.garminSentences[
-                        'Symptom severity after consumption'] ??
-                    '',
-                style: titleStyle.copyWith(fontSize:12 ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-        ],
-      ),
-    ];
-    children2.addAll(buildConsumptionsRows());
-    if(!isHebrew)
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller
-          .animateTo(controller.position.maxScrollExtent,
-          duration: Duration(seconds: 1), curve: Curves.ease);});
-    return Column(
-      children: [
-        const SizedBox(height: 20),
-        Container(
-          alignment: isHebrew ? Alignment.centerRight : Alignment.centerLeft,
-          padding: EdgeInsets.only(
-              left: isHebrew ? 0 : 30, right: isHebrew ? 30 : 0),
-          child: Text(
-            garminServices.garminSentences['ConsumptionRecords'] ?? '',
-            style: titleStyle.copyWith(fontSize: 19),
-          ),
-        ),
-        const SizedBox(height: 15),
-        // const SizedBox(height: 20),
-         Container(
-           // height: screenSize.height*0.3,
-           // width:screenSize.width*1.55,
-           padding: const EdgeInsets.only(left: 10,right: 10),
-           child:
-           ScrollConfiguration(
-             behavior: MyCustomScrollBehavior(), child:
-             SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-
-
-controller: controller,
-                // child: Container(
-                //   constraints: BoxConstraints(maxWidth: screenSize.width*0.55, maxHeight: screenSize.height*0.3),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: children2,
-                  ),
-                ),
-           ),
-         ),
-         // ),
-      ],
-    );
-  }
-
-  List<Widget> buildConsumptionsRows() {
-    TextStyle textStyle = const TextStyle(
-      fontSize: 14,
-      fontFamily: 'Assistant',
-      fontWeight: FontWeight.bold,
-    );
-    if (widget.clickedBar == null && widget.clickedWeekBar == null) {
-      return [];
+    if (_isTableDataLoaded == false) {
+      retreiveDataDB();
     }
 
-    final List<Widget> records = widget.reords.map((consumption) {
-      if (widget.clickedBar != null && widget.clickedWeekBar == null) {
-        if (widget.clickedBar!.dateTime.year !=
-                consumption.consumptionTime.year ||
-            widget.clickedBar!.dateTime.month !=
-                consumption.consumptionTime.month ||
-            widget.clickedBar!.dateTime.day !=
-                consumption.consumptionTime.day) {
-          return Container();
-        }
-      } else if (widget.clickedBar == null && widget.clickedWeekBar != null) {
-        if (widget.clickedWeekBar!.dateTime.start
-                .isAfter(consumption.consumptionTime) ||
-            widget.clickedWeekBar!.dateTime.end
-                .isBefore(consumption.consumptionTime)) {
-          return Container();
-        }
-      } else if (widget.clickedBar == null && widget.clickedWeekBar == null) {
-        return Container();
-      }
-
-      String date = beautyDate(consumption.consumptionTime);
-
-      String hour = beatyHour(consumption.consumptionTime);
-
-      String productName = consumption.productName;
-
-      String consumptionMethod = consumption.consumptionMethod;
-
-      String consumptionMethodImage = '';
-
-      String smoking = AppLocalizations.of(context)?.smoking ?? 'Smoking';
-
-      String oil = AppLocalizations.of(context)?.oil ?? 'Oil';
-
-      String vaping = AppLocalizations.of(context)?.vaping ?? 'Vaping';
-      if (smoking == consumptionMethod) {
-        consumptionMethodImage = 'Smoking';
-      } else if (oil == consumptionMethod) {
-        consumptionMethodImage = 'Oil1';
-      } else if (vaping == consumptionMethod) {
-        consumptionMethodImage = 'Vaping';
-      }
-
-      String type = consumption.type;
-
-      String character = consumption.character;
-
-      String category = consumption.category;
-
-      double amount = consumption.amount;
-
-      String amountOfSmoking = '';
-
-      if (AppLocalizations.of(context)!.languageName == 'Hebrew') {
-        amountOfSmoking =
-            '${consumption.consumptionMethod != AppLocalizations.of(context)!.oil ? amount : amount.toInt()}  ${consumption.consumptionMethod != AppLocalizations.of(context)!.oil ? AppLocalizations.of(context)!.grams : AppLocalizations.of(context)!.drops}';
-      } else {
-        amountOfSmoking =
-            '${consumption.consumptionMethod != AppLocalizations.of(context)!.oil ? amount : amount.toInt()}  ${consumption.consumptionMethod != AppLocalizations.of(context)!.oil ? AppLocalizations.of(context)!.grams : AppLocalizations.of(context)!.drops}';
-      }
-
-      int severityBefore = consumption.symptomSeverityBeforeConsumption;
-
-      int severityAfter = consumption.symptomSeverityAfterConsumption;
-
-      String productImage = !consumption.productImage.startsWith('https')
-          ? 'https://www.thc.mba${consumption.productImage}'
-          : consumption.productImage;
-
-      return Column(
-        children: [
-          const SizedBox(height: 5),
-          Container(
-            alignment: Alignment.center,
-            height: 36,
-            color: Colors.grey[200],
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                textDirection:
-                    AppLocalizations.of(context)!.languageName == 'Hebrew'
-                        ? TextDirection.rtl
-                        : TextDirection.ltr,
-                children: [
-                  // const SizedBox(
-                  //   width: 20,
-                  // ),
-                  // Date.
-                  Container(
-                    alignment: Alignment.center,
-                    width: 80,
-                    height: 36,
-                    child: Text(
-                      date,
-                      textAlign: TextAlign.center,
-                      style: textStyle,
-                    ),
-                  ),
-                  // const SizedBox(
-                  //   width: 20,
-                  // ),
-                  // Hour.
-                  Container(
-                    alignment: Alignment.center,
-                    width: 80,
-                    height: 36,
-                    child: Text(
-                      hour,
-                      textAlign: TextAlign.center,
-                      style: textStyle,
-                    ),
-                  ),
-                  // Product image.
-                  Container(
-                    alignment: Alignment.center,
-                    width: 100,
-                    height: 36,
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith<Color>(
-                                (states) => Colors.transparent),
-                        overlayColor: MaterialStateProperty.resolveWith<Color>(
-                          ((states) => Colors.transparent),
-                        ),
-                        shadowColor: MaterialStateProperty.resolveWith<Color>(
-                          ((states) => Colors.transparent),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: screenSize.height * 50 / 601),
+        const Padding(
+          padding: EdgeInsets.only(top: 30, right: 35),
+          child: Text('פירוט שימושים',
+              style: TextStyle(
+                  color: Color.fromRGBO(78, 122, 199, 1),
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600)),
+        ),
+        const SizedBox(height: 20.0),
+        SizedBox(
+          height: 100,
+          child: ListView.builder(
+              // the number of items in the list
+              itemCount: dates.length,
+              // display each item of the product list
+              itemBuilder: (context, index) {
+                Color c = index == 0 ? Colors.blue : Colors.black;
+                return Material(
+                  color: index % 2 == 0 ? Colors.white : Colors.black26,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 12,
+                        child: Center(
+                          child: Text(dates[index],
+                              style: TextStyle(
+                                  color: c,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w800)),
                         ),
                       ),
-                      onPressed: () async {
-                        await showImageViewer(
-                            context, Image.network(productImage).image);
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 60,
-                        width: 80,
-                        // decoration: BoxDecoration(
-                        //   image: DecorationImage(
-                        //     fit: BoxFit.fill,
-                        //     image: NetworkImage(productImage),
-                        //   ),
-                        // ),
-                        child: WebImage(imageUrl: productImage),
+                      Expanded(
+                        flex: 8,
+                        child: Center(
+                          child: Text(times[index],
+                              style: TextStyle(
+                                  color: c,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w800)),
+                        ),
                       ),
-                    ),
-                  ),
-                  // Product name.
-                  Container(
-                    alignment: Alignment.center,
-                    width: 100,
-                    height: 36,
-                    child: Text(
-                      productName,
-                      textAlign: TextAlign.center,
-                      style: textStyle,
-                    ),
-                  ),
-                  // Product category.
-                  Container(
-                    alignment: Alignment.center,
-                    width: 100,
-                    height: 36,
-                    child: Text(
-                      category,
-                      textAlign: TextAlign.center,
-                      style: textStyle,
-                    ),
-                  ),
-                  // Product type.
-                  Container(
-                    alignment: Alignment.center,
-                    width: 80,
-                    height: 36,
-                    child: Text(
-                      type,
-                      textAlign: TextAlign.center,
-                      style: textStyle,
-                    ),
-                  ),
-                  // Product character.
-                  Container(
-                    alignment: Alignment.center,
-                    width: 80,
-                    height: 36,
-                    child: Text(
-                      character,
-                      textAlign: TextAlign.center,
-                      style: textStyle,
-                    ),
-                  ),
-                  // Consumed quantity.
-                  // const SizedBox(width: 15),
-                  Container(
-                    alignment: Alignment.center,
-                    width: 120,
-                    height: 36,
-                    child: Text(
-                      amountOfSmoking,
-                      textAlign: TextAlign.center,
-                      style: textStyle,
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    width: 120,
-                    height: 36,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/icons/$consumptionMethodImage.png',
-                          width: 20,
-                          height: 20,
+                      Expanded(
+                        flex: 12,
+                        child: Center(
+                          child: Text(productNames[index],
+                              style: TextStyle(
+                                  color: c,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w800)),
                         ),
-                        Text(
-                          consumptionMethod,
-                          textAlign: TextAlign.center,
-                          style: textStyle.copyWith(fontSize: 10),
+                      ),
+                      Expanded(
+                        flex: 12,
+                        child: Center(
+                          child: Text(productDefinitions[index],
+                              style: TextStyle(
+                                  color: c,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w800)),
                         ),
-                      ],
-                    ),
+                      ),
+                      Expanded(
+                        flex: 8,
+                        child: Center(
+                          child: Text(productKinds[index],
+                              style: TextStyle(
+                                  color: c,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w800)),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 8,
+                        child: Center(
+                          child: Text(productTypes[index],
+                              style: TextStyle(
+                                  color: c,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w800)),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 10,
+                        child: Center(
+                          child: Text(consumedQuantities[index],
+                              style: TextStyle(
+                                  color: c,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w800)),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 10,
+                        child: Center(
+                          child: Text(consumptionMethods[index],
+                              style: TextStyle(
+                                  color: c,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w800)),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 10,
+                        child: Center(
+                          child: Text(beforeConsumptionSeverities[index],
+                              style: TextStyle(
+                                  color: c,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w800)),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 10,
+                        child: Center(
+                          child: Text(afterConsumptionSeverities[index],
+                              style: TextStyle(
+                                  color: c,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w800)),
+                        ),
+                      ),
+                    ],
                   ),
-                  // const SizedBox(width: 25),
-                  Container(
-                    alignment: Alignment.center,
-                    width: 110,
-                    height: 36,
-                    child: Text(
-                      severityBefore.toString(),
-                      textAlign: TextAlign.center,
-                      style: textStyle.copyWith(
-                          fontSize: 15,
-                          color: severityBefore <= 2
-                              ? Colors.red
-                              : severityBefore == 3
-                                  ? Colors.orange
-                                  : Colors.green),
-                    ),
-                  ),
-                  // const SizedBox(width: 60),
-                  Container(
-                    alignment: Alignment.center,
-                    width: 110,
-                    height: 36,
-                    child: Text(
-                      severityAfter.toString(),
-                      textAlign: TextAlign.center,
-                      style: textStyle.copyWith(
-                          fontSize: 15,
-                          color: severityAfter <= 2
-                              ? Colors.red
-                              : severityAfter == 3
-                                  ? Colors.orange
-                                  : Colors.green),
-                    ),
-                  ),
-                  // const SizedBox(width: 60)
-                ],
-              ),
-            ),
-          ),
-        ],
-      );
-    }).toList();
-
-    return records;
-  }
-
-  String beautyDate(DateTime consumptionTime) {
-    int day1 = consumptionTime.day;
-    String day = day1 < 10 ? '0$day1' : '$day1';
-    day1 = consumptionTime.month;
-    String month = day1 < 10 ? '0$day1' : '$day1';
-
-    return '$day/$month/${consumptionTime.year}';
-  }
-
-  String beatyHour(DateTime consumptionTime) {
-    int day1 = consumptionTime.hour;
-    String hour = day1 < 10 ? '0$day1' : '$day1';
-    day1 = consumptionTime.minute;
-    String minute = day1 < 10 ? '0$day1' : '$day1';
-    return '$hour:$minute';
+                );
+              }),
+        ),
+      ],
+    );
   }
 }

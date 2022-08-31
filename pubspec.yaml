@@ -47,7 +47,13 @@ dependencies:
   date_format: ^2.0.5
   syncfusion_flutter_sliders: ^20.2.38
   flutter_rounded_date_picker: 3.0.1
-#  flutter_html: ^2.2.1
+  shared_preferences: ^2.0.15
+  auto_size_text: ^3.0.0
+  fl_chart: ^0.55.1
+  ndialog: ^4.1.1+1
+  font_awesome_flutter: ^10.1.0
+
+  #  flutter_html: ^2.2.1
 
 
 
