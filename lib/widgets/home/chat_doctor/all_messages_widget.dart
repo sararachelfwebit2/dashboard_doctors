@@ -3,15 +3,19 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard_doctors/models/message.dart';
 import 'package:dashboard_doctors/models/questionnaire.dart';
+import 'package:dashboard_doctors/widgets/home/chat/answer_chat_bubble.dart';
 import 'package:dashboard_doctors/widgets/home/chat/question_chat_bubble.dart';
+import 'package:dashboard_doctors/widgets/home/chat_doctor/patiientAnswer.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../../globals.dart' as globals;
 
 class AllMessagesWidget extends StatefulWidget {
   final Stream<QuerySnapshot> myStream;
+  final String imageUrl;
 
 
-  const AllMessagesWidget({Key? key, required this.myStream}) : super(key: key);
+  const AllMessagesWidget({Key? key, required this.myStream, required this.imageUrl}) : super(key: key);
 
   @override
   State<AllMessagesWidget> createState() => _AllMessagesWidgetState();
@@ -42,6 +46,7 @@ class _AllMessagesWidgetState extends State<AllMessagesWidget> with AutomaticKee
            List<Message> messagesList = [];
 
           final messages = snapshot.data?.docs.reversed;
+
           for (var message in messages!) {
             messagesList.add(Message(
               userId: message['userId'],
@@ -60,9 +65,11 @@ class _AllMessagesWidgetState extends State<AllMessagesWidget> with AutomaticKee
                 : ListView.builder(
                     reverse: true,
                     itemCount: messagesList.length,
-                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                 //   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                     itemBuilder: (context, index) {
-                      return Text(messagesList[index].text);
+                      return  messagesList[index].isDoctor? QuestionChatBubble(text: messagesList[index].text,
+                      time:formatTime(messagesList[index].createdAt)):
+                      PatientAnswer(text: messagesList[index].text,imageUrl: widget.imageUrl,time: formatTime(messagesList[index].createdAt));
                     }),
           );
         } else {
@@ -77,6 +84,12 @@ class _AllMessagesWidgetState extends State<AllMessagesWidget> with AutomaticKee
 @override
   void dispose() {
   super.dispose();
+  }
+
+  formatTime(DateTime dateTime)
+  {
+    final DateFormat formatter = DateFormat('hh:mm a');
+   return formatter.format(dateTime);
   }
 
   Stream<QuerySnapshot> fetchData()

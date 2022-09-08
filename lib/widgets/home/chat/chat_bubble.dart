@@ -32,7 +32,7 @@ class ChatBubble extends StatelessWidget {
         : Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              QuestionChatBubble(question: question),
+              QuestionChatBubble(text: question.question,time: "",),
               if (question.anwersType != 'None')
                 AnswerChatBubble(
                   question: question,

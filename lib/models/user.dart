@@ -20,8 +20,8 @@ class UserStats with ChangeNotifier {
   String id = '';
   String email = '';
   bool isGarminConnectedIn24=false;
-
-  UserStats(this.id,this.email, this.isGarminConnectedIn24);
+ String imageUrl='';
+  UserStats(this.id,this.email,this.imageUrl, this.isGarminConnectedIn24);
 // String gender = '';
   // String birth = '';
   // String imageUrl = '';

@@ -81,7 +81,7 @@ class _UserListState extends State<UserList> {
                               setState(() {
                                 chosenId = myUsers[i].id;
                               });
-                              widget.onChoose(myUsers[i].id, myUsers[i].email);
+                              widget.onChoose(myUsers[i].id, myUsers[i].email,myUsers[i].imageUrl);
                             },
                             child: Container(
                                 padding: EdgeInsets.all(10),

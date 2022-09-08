@@ -1,4 +1,6 @@
+import 'package:dashboard_doctors/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BubbleImage extends StatelessWidget {
   const BubbleImage({Key? key, this.imageUrl, required this.isLeema})
@@ -10,8 +12,8 @@ class BubbleImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 40,
-      width: 40,
+      height: 38.66.h,
+      width: 38.66.w,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.white,
@@ -28,9 +30,16 @@ class BubbleImage extends StatelessWidget {
       child: isLeema
           ? ImageIcon(
               const AssetImage('assets/icons/logo.png'),
-              color: Colors.lightBlue[900]!,
+              color: HexaColor('#4E7AC7'),
             )
-          : Container(),
+          : /*imageUrl != null && imageUrl != ''? CircleAvatar(
+          backgroundImage: NetworkImage(imageUrl!), radius: 15.0,
+      ):const ImageIcon(
+        AssetImage('assets/icons/user.png'),
+        color: Colors.white,
+
+      ),*/
+     Container(),
     );
   }
 }

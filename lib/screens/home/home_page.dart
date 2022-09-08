@@ -22,6 +22,7 @@ import 'package:dashboard_doctors/widgets/home/user_list.dart';
 import 'package:dashboard_doctors/widgets/webImage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -147,12 +148,12 @@ class _HomePageState extends State<HomePage> {
                   child: Row(
                     children: [
                       Container(
-                        width: screenSize.width * 0.25,
+                        width: /*screenSize.width * 0.25*/443.w,
                         color: const Color.fromRGBO(234, 240, 254, 1),
                         child: Column(
                           children: [
                             PersonalDetails(mail: chosenPatientMail ?? ''),
-                            const SizedBox(height: 20),
+                             SizedBox(height: 35.h),
                               Expanded(child:chat )
                           ],
                         ),
@@ -195,17 +196,17 @@ class _HomePageState extends State<HomePage> {
 
     for (DocumentSnapshot user in data.docs) {
       myUsers
-          .add(UserStats(user.id, user['email'], await checkGarmin(user.id)));
+          .add(UserStats(user.id, user['email'],user['imageUrl'], await checkGarmin(user.id)));
     }
     globals.chosenPatientId = myUsers[0].id;
     chosenPatientMail = myUsers[0].email;
     _myStream=fetchData();
-    chat= Chat(myStream: _myStream);
+    chat= Chat(myStream: _myStream,imageUrl: myUsers[0].imageUrl,);
     print('hhhh ${globals.chosenPatientId}');
     userList = UserList(
         myUsers: myUsers,
-        onChoose: (user, mail) {
-          setChosenPatient(user, mail);
+        onChoose: (user, mail,imageUrl) {
+          setChosenPatient(user, mail,imageUrl);
         });
     getQuestionnaires();
     isLoadingPatients = false;
@@ -267,7 +268,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
-  setChosenPatient(String id, String mail) async {
+  setChosenPatient(String id, String mail,imageUrl) async {
     //setState is called when getQuestionnaires is fetched
     //   setState(() {
     globals.chosenPatientId = id;
@@ -277,7 +278,7 @@ class _HomePageState extends State<HomePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("selectedPatient", globals.chosenPatientId ?? "");
   _myStream=fetchData();
-  chat=Chat(myStream: _myStream);
+  chat=Chat(myStream: _myStream,imageUrl: imageUrl);
     isLoadingQ = true;
     questionnaireModel.clearData();
     getQuestionnaires();
@@ -288,7 +289,7 @@ class _HomePageState extends State<HomePage> {
   {
     return FirebaseFirestore.instance
         .collection('chats/${globals.chosenPatientId}/messages')
-        .orderBy('createdAt', descending: true)
+        .orderBy('createdAt'/*, descending: true*/)
         .snapshots();
   }
 

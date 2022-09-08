@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 
 
 import 'screens/home/home_page.dart';
@@ -63,41 +65,48 @@ class MyApp extends StatelessWidget {
     create: (context) => GarminServices(),
     ),
     ],
-      child:
-      MaterialApp(
-      title: 'dashboard doctors',
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: [
-        const Locale('en'),
-        const Locale('he'),
-      ],
-      theme: ThemeData(
-        primarySwatch: MaterialColor(
-          0xFF4E7AC7,
-          Map.from(
-            {
-              50: const Color.fromARGB(100, 78, 122, 199),
-              100: const Color.fromARGB(100, 78, 122, 199),
-              200: const Color.fromARGB(100, 78, 122, 199),
-              300: const Color.fromARGB(100, 78, 122, 199),
-              400: const Color.fromARGB(100, 78, 122, 199),
-              500: const Color.fromARGB(100, 78, 122, 199),
-              600: const Color.fromARGB(100, 78, 122, 199),
-              700: const Color.fromARGB(100, 78, 122, 199),
-              800: const Color.fromARGB(100, 78, 122, 199),
-              900: const Color.fromARGB(100, 78, 122, 199),
-            },
+      child:ScreenUtilInit(
+        designSize: const Size(1920,1080),
+        minTextAdapt: true,
+        builder: (BuildContext context, Widget? child) {
+        return MaterialApp(
+          title: 'dashboard doctors',
+          debugShowCheckedModeBanner: false,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: [
+            const Locale('en'),
+            const Locale('he'),
+          ],
+          theme: ThemeData(
+            primarySwatch: MaterialColor(
+              0xFF4E7AC7,
+              Map.from(
+                {
+                  50: const Color.fromARGB(100, 78, 122, 199),
+                  100: const Color.fromARGB(100, 78, 122, 199),
+                  200: const Color.fromARGB(100, 78, 122, 199),
+                  300: const Color.fromARGB(100, 78, 122, 199),
+                  400: const Color.fromARGB(100, 78, 122, 199),
+                  500: const Color.fromARGB(100, 78, 122, 199),
+                  600: const Color.fromARGB(100, 78, 122, 199),
+                  700: const Color.fromARGB(100, 78, 122, 199),
+                  800: const Color.fromARGB(100, 78, 122, 199),
+                  900: const Color.fromARGB(100, 78, 122, 199),
+                },
+              ),
+            ),
           ),
-        ),
-      ),
-      home:  Scaffold( body: HomePage()),
-    ));
+          home:  Scaffold( body: HomePage()),
+        );
+      },)
+
+
+     );
   }
 }
 
